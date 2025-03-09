@@ -9,6 +9,7 @@ import logo_light_theme from "./logo-light-theme.svg";
 import pattern_character_count from "./pattern-character-count.svg";
 import pattern_sentence_count from "./pattern-sentence-count.svg";
 import pattern_word_count from "./pattern-word-count.svg";
+import icon from "./icon.png";
 
 
 
@@ -23,5 +24,6 @@ export const assets = {
     logo_light_theme,
     pattern_character_count,
     pattern_sentence_count,
-    pattern_word_count
+    pattern_word_count,
+    icon
 }
