@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Statistics from './Statistics'
 import Density from './Density'
+import { assets } from '../assets/assets';
 
 const Form = ({theme}) => {
 
@@ -10,21 +11,36 @@ const Form = ({theme}) => {
 
   const [characterLimit, setCharacterLimit] = useState(false);
 
-
+  const [limitReached, setLimitReached] = useState(false);
+ 
   const handleChange = (e) => {
+    if((e.target.value.length >= characterLimit) && (!e.target.value.length == 0)){
+        setLimitReached(true)
+    }else{
+        setLimitReached(false)
+    }
     setSentence(e.target.value)
   }
+  
+  
 
   return (
     <div className='mx-4 md:mx-8 lg:mx-0'>
         <form >
             <textarea placeholder='Start typing here...(or paste your text)'
                 value={sentence.text} 
-                className='w-full h-[200px] cursor-pointer text-neutral-700 bg-neutral-100 resize-none outline-purple-500 dark:outline-orange-500  focus:drop-shadow-xl dark:shadow-amber-500 border mb-8 border-neutral-200 rounded-lg p-6 text-xl dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200 '
+                className={`w-full h-[200px] cursor-pointer text-neutral-700 bg-neutral-100 resize-none ${ limitReached ? "outline-orange-500 focus:shadow-orange-500" : "outline-purple-500 focus:shadow-purple-500"}    shadow-lg  mb-4 border-none rounded-lg p-6 text-xl dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200 `}
                 onChange={ handleChange }
                 >   
-                </textarea>
-            <div className='flex flex-col gap-2 md:flex-row md:justify-between'>
+            </textarea>
+            {
+                limitReached ? <span className='text-orange-500 flex align-top'> <img src={assets.icon_info} alt="icon_info" className='mr-2' /> Limit reached! Your text exceeds 300 characters.</span> : ""
+            }
+            
+            
+            <div className='flex flex-col gap-2 md:flex-row md:justify-between mt-2'>
+
+
                 <div className='flex flex-col gap-2 md:flex-row '>
                     <div className='flex align-middle gap-2'>
                         <input type="checkbox" checked={excludeSpaces} onChange={(e) => setExcludeSpaces(!excludeSpaces) } className='accent-purple-500 cursor-pointer'/>
@@ -36,7 +52,13 @@ const Form = ({theme}) => {
 
                         {
                             characterLimit 
-                                ? <input type="text" name="" id="" className='px-3 max-w-[60px] border rounded-md outline-0 dark:border-neutral-700 dark:text-neutral-200' maxLength={3} minLength={1} />
+                                ? <input 
+                                    type="number" 
+                                    className='px-3 max-w-[60px] border rounded-md outline-0 dark:border-neutral-700 dark:text-neutral-200 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none' 
+                                    min={1} 
+                                    max={999} 
+                                    onChange={(e) => {setCharacterLimit(Number(e.target.value))}}
+                                    />
                                 : ""
                         }
                         
@@ -48,7 +70,7 @@ const Form = ({theme}) => {
             </div>
         </form>
 
-        <Statistics sentence={sentence}/>
+        <Statistics sentence={sentence} excludeSpaces={excludeSpaces}/>
         <Density theme={theme}/>
     </div>
   )
